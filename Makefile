@@ -4,7 +4,7 @@ TOPDIR=../..
 include $(TOPDIR)/config/config.site
 TARGET = libUQTk.a
 F77FILES =
-CXXFILES = PCBasis.cpp PCSet.cpp kldecompuni.cpp
+CXXFILES = PCBasis.cpp PCSet.cpp kldecompuni.cpp testPC.cpp ticktock.cpp
 CCFILES = 
 INCFILES = PCBasis.h PCSet.h kldecompuni.h
 SRCS = $(CCFILES) $(CXXFILES) $(F77FILES)
@@ -15,6 +15,12 @@ INCDIRS = -I . -I $(LIBINCDIR)
 DEFS = -D__$(FTNNAME) 
 .SUFFIXES : .cpp
 
+LIBS = -L$(LIBBINDIR) -lUQTk -lquad -luqtkmcmc -luqtktools -llbfgs -lcvode-2.6.0 -ldsfmt \
+       -l$(LAPACK) -l$(SLATEC) -l$(BLAS) -lxmlutils -lexpat $(FCLIB)
+LDEP = $(LIBBINDIR)/libUQTk.a $(LIBBINDIR)/libquad.a $(LIBBINDIR)/liblbfgs.a $(LIBBINDIR)/libbcs.a \
+       $(LIBBINDIR)/libuqtktools.a $(LIBBINDIR)/libcvode-2.6.0.a \
+       $(LIBBINDIR)/libdsfmt.a $(LIBBINDIR)/lib$(LAPACK).a \
+       $(LIBBINDIR)/lib$(SLATEC).a $(LIBBINDIR)/lib$(BLAS).a 
 
 all: $(TARGET)
 
@@ -36,7 +42,7 @@ links:
 	done
 
 clean:
-	rm -f $(OBJS) $(TARGET) 
+	rm -f $(OBJS) $(TARGET) *.x 
 
 .f.o:
 	$(F77) $(FFLAGS) $(DEFS) $(INCDIRS) -c $*.f
@@ -47,5 +53,5 @@ clean:
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $(DEFS) $(INCDIRS) -c $*.cpp
 
-test: $(TARGET)
-	@echo "The test target has not been implemented for $(TARGET)"
+test:
+	$(CXX) $(CXXFLAGS) $(DEFS) $(INCDIRS) -o testPC.x testPC.o $(LIBS)

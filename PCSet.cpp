@@ -42,8 +42,8 @@ int PCSet::next_index_ = 0;
 PCSet::OMap_t *PCSet::omap_ = NULL;
 
 
-PCSet::PCSet(const string sp_type, const int order, const int n_dim, const string pc_type, const double alpha, const double betta): 
-  spType_(sp_type), pcType_(pc_type), order_(order), nDim_(n_dim), alpha_(alpha), beta_(betta)
+PCSet::PCSet(const string sp_type, const int order, const int n_dim, const string pc_type, const double alpha, const double betta, const bool compute3): 
+  spType_(sp_type), pcType_(pc_type), order_(order), nDim_(n_dim), alpha_(alpha), beta_(betta), compute3_(compute3)
 {
   SetVerbosity(0);
 
@@ -229,7 +229,9 @@ void PCSet::InitISP()
  
 
   // Initialize the factors for products
-  this->EvalBasisProd3();
+  if (compute3_){//control if compute the dijk terms
+    this->EvalBasisProd3();
+  }
 
   // Set some defaults
   this->rTolTaylor_    = 1.e-6        ;

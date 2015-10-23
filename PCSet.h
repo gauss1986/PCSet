@@ -63,7 +63,7 @@ public:
   /// "ISP" (intrusive methods), "NISP" (non-intrusive), 
   /// or "NISPnoq" (non-intrusive without quadrature initialization)
   /// \note alpha and betta are parameters only relevant for GLG, JB or SW chaoses
-  PCSet(const string sp_type, const int order, const int n_dim, const string pc_type, const double alpha=0.0, const double betta=1.0);
+  PCSet(const string sp_type, const int order, const int n_dim, const string pc_type, const double alpha=0.0, const double betta=1.0,const bool compute3=true);
 
   /// \brief Constructor: initializes the PC basis set ordered in an HDMR fashion
   /// given order per each HDMR rank (univariate, bivariate, etc...)
@@ -835,6 +835,9 @@ public:
   double alpha_; 
   /// \brief Parameter beta for PCs that require two parameters (SW,JB)
   double beta_;
+
+  /// \brief parameter to control if computing dijk
+  bool compute3_;
   
   /// \brief Definition of a map to connect integer indexes with pointers to this class
   typedef std::map<int, PCSet*> OMap_t;
