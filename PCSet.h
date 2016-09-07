@@ -38,6 +38,7 @@
 #include "error_handlers.h"
 #include "ftndefs.h"
 #include "quad.h"
+#include "fstream"
 
 /*  CVODE headers  */
 #include <cvode/cvode.h>             /* prototypes for CVODE fcts., consts.  */
@@ -204,7 +205,7 @@ public:
   /// \note This function only holds for expansions with one stochastic dimension
   /// \note All existing coefficient values in p will be overwritten
   /// \todo Make this function work for general multi-indices, and for any number of stochastic dimensions
-  void InitMeanStDv(const double& m, const double& s, double* p) const;
+  void InitMeanStDv(const double& m, const double& s, const int& ind, double* p) const;
 
   /// \brief Initializes a PC expansion p in Array1D<double> format to have the same distribution as the underlying PC germ,
   /// but with a specified mean m and standard deviation s
@@ -212,7 +213,8 @@ public:
   /// \note This function only holds for expansions with one stochastic dimension
   /// \note All existing coefficient values in p will be overwritten
   /// \todo Make this function work for general multi-indices, and for any number of stochastic dimensions
-  void InitMeanStDv(const double& m, const double& s, Array1D<double>& p) const;
+  void InitMeanStDv(const double& m, const double& s, const int& ind, Array1D<double>& p) const;
+  void OutputNormSquare(Array1D<double>& NormSq) const;
 
   /// \brief Copy PC expansion p2 into p1 (i.e. p1 = p2).
   ///
@@ -598,7 +600,29 @@ public:
   /// \brief Check if the point x is in the PC domain
   bool IsInDomain(double x);
 
+  /// \brief save scaler to file
+  void savescal(int data, std::ofstream& ofs_data);
 
+  /// \brief save 1D array to file
+  void save1D(Array1D<double>& data, std::ofstream& ofs_data);
+ 
+  /// \brief save 1d array of 1D double array to file
+  void save1D1D(Array1D<Array1D<double> >& data, Array1D<int>& dimonk, std::ofstream& ofs_data);
+
+  /// \brief save 1d array of 1D int array to file
+  void save1D1D(Array1D<Array1D<int> >& data, Array1D<int>& dimonk, std::ofstream& ofs_data);
+
+  /// \brief load scalar
+  void loadscal(int n, int data, std::ifstream& ifs_size, std::ifstream& ifs_data);
+
+  /// \brief load 1D vector
+  void load1D(int n, Array1D<double> data, std::ifstream& ifs_size, std::ifstream& ifs_data);
+
+  /// \brief test if a file exists
+  inline bool exist(const std::string& name);
+ 
+  /// \brief reture the type of PC 
+  string GetPCType() const {return pcType_;}
 
  private:
   /// \brief Dummy default constructor, which should not be used as it is not well defined
@@ -839,6 +863,9 @@ public:
   /// \brief parameter to control if computing dijk
   bool compute3_;
   
+  /// \brief parameter to control if PC is loaded
+  bool load_;
+
   /// \brief Definition of a map to connect integer indexes with pointers to this class
   typedef std::map<int, PCSet*> OMap_t;
   /// \brief index of next object in map

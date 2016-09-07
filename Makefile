@@ -4,7 +4,7 @@ TOPDIR=../..
 include $(TOPDIR)/config/config.site
 TARGET = libUQTk.a
 F77FILES =
-CXXFILES = PCBasis.cpp PCSet.cpp kldecompuni.cpp testPC.cpp ticktock.cpp
+CXXFILES = PCBasis.cpp PCSet.cpp kldecompuni.cpp ticktock.cpp
 CCFILES = 
 INCFILES = PCBasis.h PCSet.h kldecompuni.h
 SRCS = $(CCFILES) $(CXXFILES) $(F77FILES)
@@ -42,7 +42,7 @@ links:
 	done
 
 clean:
-	rm -f $(OBJS) $(TARGET) *.x 
+	rm -f $(OBJS) $(TARGET) *.x *.o 
 
 .f.o:
 	$(F77) $(FFLAGS) $(DEFS) $(INCDIRS) -c $*.f
@@ -54,4 +54,5 @@ clean:
 	$(CXX) $(CXXFLAGS) $(DEFS) $(INCDIRS) -c $*.cpp
 
 test:
-	$(CXX) $(CXXFLAGS) $(DEFS) $(INCDIRS) -o testPC.x testPC.o $(LIBS)
+	$(CXX) $(CXXFLAGS) $(DEFS) $(INCDIRS) -c testPC.cpp -pg
+	$(CXX) $(CXXFLAGS) $(DEFS) $(INCDIRS) -o testPC.x testPC.o $(LIBS) -pg

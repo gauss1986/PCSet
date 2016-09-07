@@ -35,7 +35,13 @@
 #include "quad.h"
 #include "multiindex.h"
 #include "minmax.h"
-
+#include "uqtktools.h"
+#include <iostream>
+#include <fstream>
+#include "arraytools.h"
+#include "Array1D.h"
+#include <sys/stat.h>
+#include <unistd.h>
 
 // Static members need to be pre-declared
 int PCSet::next_index_ = 0;
@@ -45,15 +51,154 @@ PCSet::OMap_t *PCSet::omap_ = NULL;
 PCSet::PCSet(const string sp_type, const int order, const int n_dim, const string pc_type, const double alpha, const double betta, const bool compute3): 
   spType_(sp_type), pcType_(pc_type), order_(order), nDim_(n_dim), alpha_(alpha), beta_(betta), compute3_(compute3)
 {
+  // Define the names for the size/data file
+  stringstream ss;
+  ss << order;
+  stringstream ss2;
+  ss2 << n_dim;
+  stringstream ss3;
+  if (!compute3)
+      ss3 << "_no3";
+  std::string name = "/home/p/pbn/lgao/UQTK/src_cpp/uqtk/data/PC_"+pc_type+"_"+ss2.str()+"_"+ss.str()+ss3.str();
+  std::string name_size = name+"_size.dat";
+  std::string name_data = name+"_data.dat";
+
+  load_ = exist(name_size) && exist(name_data);
+
   SetVerbosity(0);
+  maxOrdPerDim_.Resize(this->nDim_,this->order_);
 
   nPCTerms_=computeMultiIndex(nDim_,order_, multiIndex_);
-
-  maxOrdPerDim_.Resize(this->nDim_,this->order_);
-  
   Initialize("TotalOrder");
 
+  if (!load_)
+  {
+  cout << "PCSet is being generated" << endl; 
+  // save files
+  std::ofstream ofs_data(name_data.c_str(),ios::binary);
+  std::ofstream ofs_size(name_size.c_str(),ios::binary);
+  
+  save1D(this->psiSq_, ofs_data);
+
+  Array1D<int> dimonki(nPCTerms_,0);
+  Array1D<int> dimonkj(nPCTerms_,0);
+  Array1D<int> dimonkpsi(nPCTerms_,0);
+  if (compute3){
+    save1D1D(this->iProd2_, dimonki, ofs_data);
+    save1D1D(this->jProd2_, dimonkj, ofs_data);
+    save1D1D(this->psiIJKProd2_, dimonkpsi, ofs_data);
+    // test if the sizes of non-zero terms are the same on every dim
+    for (int i=0;i<nPCTerms_;i++)
+        if (!((dimonki(i) == dimonkj(i)) && (dimonki(i) == dimonkpsi(i))))
+            cout << "The size of non-zero terms on dim " << i << " is not the same!!!" << endl; 
+    for (int i=0;i<nPCTerms_;i++)
+        ofs_size.write((char *)&dimonki(i),sizeof(dimonki(i)));
+  }
+
+  ofs_data.close();
+  ofs_size.close();
+  }
+
+  else
+  {
+  cout << "PCSet is being partially loaded" << endl;
+  // load files
+  std::ifstream ifs_size(name_size.c_str(),ios::binary);
+  std::ifstream ifs_data(name_data.c_str(),ios::binary);
+  
+  Array1D<double> psiSq(nPCTerms_,0.e0);
+  for (int i=0;i<nPCTerms_;i++)
+    ifs_data.read((char *)&psiSq(i),sizeof(psiSq(0)));
+
+  psiSq_=psiSq;
+
+  if (compute3){
+    Array1D<int> dimon_ghost(nPCTerms_);
+    for (int i=0;i<nPCTerms_;i++){
+        ifs_size.read((char *)&dimon_ghost(i),sizeof(dimon_ghost(i)));
+        //cout << "No. of none-zero term on dim " << i << " is " << dimon_ghost(i) << endl;
+    }
+    Array1D<Array1D<int> > iProd2(nPCTerms_);
+    for (int i=0;i<nPCTerms_;i++){
+        for (int j=0;j<dimon_ghost(i);j++){
+            int temp;
+            ifs_data.read((char *)&temp,sizeof(temp)); 
+            iProd2(i).PushBack(temp);
+        }
+    }
+    Array1D<Array1D<int> > jProd2(nPCTerms_);
+    for (int i=0;i<nPCTerms_;i++){
+        for (int j=0;j<dimon_ghost(i);j++){
+            int temp;
+            ifs_data.read((char *)&temp,sizeof(temp)); 
+            jProd2(i).PushBack(temp);
+        }
+    }
+    Array1D<Array1D<double> > psiIJKProd2(nPCTerms_);
+    for (int i=0;i<nPCTerms_;i++){
+        for (int j=0;j<dimon_ghost(i);j++){
+            double temp;
+            ifs_data.read((char *)&temp,sizeof(temp)); 
+            psiIJKProd2(i).PushBack(temp);
+        }
+    }
+    iProd2_=iProd2;
+    jProd2_=jProd2;
+    psiIJKProd2_=psiIJKProd2;
+  }
+
+  ifs_size.close();
+  ifs_data.close(); 
+  }
+ 
   return;
+}
+
+void PCSet::savescal(int data, std::ofstream& ofs_data)
+{
+  int n = sizeof(data);
+  ofs_data.write((char *)&data,n);
+ 
+  return;
+}
+
+void PCSet::save1D(Array1D<double>& data, std::ofstream& ofs_data)
+{
+  int n = sizeof(&data);  
+  for (unsigned int i=0;i<data.XSize();i++)
+      ofs_data.write((char *)&data(i),n);
+
+  return;
+}
+
+void PCSet::save1D1D(Array1D<Array1D<double> >& data, Array1D<int>& dimonk, std::ofstream& ofs_data)
+{
+  int n = sizeof(data(0)(0));  
+  for (unsigned int i=0;i<data.XSize();i++){
+      dimonk(i) = data(i).XSize();
+      for (int j=0;j<dimonk(i);j++){
+          ofs_data.write((char *)&data(i)(j),n);
+      }
+  }
+  return;
+}
+
+void PCSet::save1D1D(Array1D<Array1D<int> >& data, Array1D<int>& dimonk, std::ofstream& ofs_data)
+{
+  int n = sizeof(data(0)(0));  
+  for (unsigned int i=0;i<data.XSize();i++){
+      dimonk(i) = data(i).XSize();
+      for (unsigned int j=0;j<data(i).XSize();j++){
+          ofs_data.write((char *)&data(i)(j),n);
+      }
+  }
+  return;
+}
+
+inline bool PCSet::exist(const std::string& name)
+{// test if a file exists
+  struct stat buffer;
+  return (stat (name.c_str(), &buffer)==0);
 }
 
 PCSet::PCSet(const string sp_type, const Array1D<int>& maxOrders, const int n_dim, const string pc_type, const double alpha, const double betta): 
@@ -171,12 +316,9 @@ void PCSet::Initialize(const string ordertype)
   p_basis_ = new PCBasis(pcType_, alpha_, beta_,maxorddim_);
   pcType_=p_basis_->GetPCType();
 
-
   // Get the norms of the multi-D basis functions
-  this->EvalNormSq(psiSq_);
+  if(!load_) this->EvalNormSq(psiSq_);
  
- 
-  
   if (!strcmp(spType_.c_str(),"NISP")){
     // Get the basis values at quadrature points (MAYBE have NISP no quad)
     this->InitNISP();
@@ -229,7 +371,7 @@ void PCSet::InitISP()
  
 
   // Initialize the factors for products
-  if (compute3_){//control if compute the dijk terms
+  if (compute3_&&(!load_)){//control if compute the dijk terms
     this->EvalBasisProd3();
   }
 
@@ -436,14 +578,21 @@ void PCSet::PrintMultiIndexNormSquared() const
 
 }
 
-void PCSet::InitMeanStDv( const double& m, const double& s, double* p ) const
+void PCSet::OutputNormSquare(Array1D<double>& NormSq) const
+{
+  for(int ip=0; ip < nPCTerms_; ip++){  
+    NormSq(ip) = psiSq_(ip);
+  }
+}
+
+void PCSet::InitMeanStDv( const double& m, const double& s, const int& ind, double* p ) const
 {
 
   // Check to make sure we have a 1D PCE
-  if ( this->nDim_ != 1 ){ 
-    string err_message = (string) "PCSet::InitMeanStDv(): Is only implemented for 1D PCEs";
-    throw Tantrum(err_message);
-  }
+  //if ( this->nDim_ != 1 ){ 
+  //  string err_message = (string) "PCSet::InitMeanStDv(): Is only implemented for 1D PCEs";
+  //  throw Tantrum(err_message);
+  //}
 
   // Check to make sure we have enough terms to set the standard deviation
   if ( this->nPCTerms_ < 2){
@@ -457,22 +606,22 @@ void PCSet::InitMeanStDv( const double& m, const double& s, double* p ) const
     throw Tantrum(err_message);
   }
 
+  // Set the remainder of coeffients to 0
+  for (int k = 0; k < this->nPCTerms_; k++){
+    p[k] = 0.e0;
+  }
+
   // Set the mean
   p[0] = m;
 
   // Set the standard deviation
-  p[1] = s/(sqrt(this->psiSq_(1)));
-
-  // Set the remainder of coeffients to 0
-  for (int k = 2; k < this->nPCTerms_; k++){
-    p[k] = 0.e0;
-  }
+  p[ind] = s/(sqrt(this->psiSq_(ind)));
 
   return;
 
 }
 
-void PCSet::InitMeanStDv( const double& m, const double& s, Array1D<double>& p ) const
+void PCSet::InitMeanStDv( const double& m, const double& s, const int& ind, Array1D<double>& p ) const
 {
 
   // Check array sizes
@@ -485,7 +634,7 @@ void PCSet::InitMeanStDv( const double& m, const double& s, Array1D<double>& p )
   }
 
   // Initialize Mean and Standard Deviation
-  this->InitMeanStDv( m, s, p.GetArrayPointer() ) ;
+  this->InitMeanStDv( m, s, ind, p.GetArrayPointer() ) ;
 
   return;
 
@@ -2365,5 +2514,4 @@ bool PCSet::IsInDomain(double x)
       return false;
   
   return true;
-}
-
+} 
