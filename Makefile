@@ -1,7 +1,7 @@
 SHELL = /bin/sh
 TOPDIR=../..
 # Many macros are defined in the below included site-specific configuration file
-include $(TOPDIR)/config/config.site
+include $(TOPDIR)/config/config3.site
 TARGET = libUQTk.a
 F77FILES =
 CXXFILES = PCBasis.cpp PCSet.cpp kldecompuni.cpp ticktock.cpp

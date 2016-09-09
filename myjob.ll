@@ -15,7 +15,7 @@
 ## Job specific
 ##===================================
 #
-# @ job_name = testPC_HG_with3
+# @ job_name = testPC_LU_with3
 # @ job_type = parallel
 # @ class = verylong
 # @ output = $(jobid).out
@@ -27,9 +27,9 @@
 #
 #===================================
 
-module load xlf vacpp
+module load gcc openmpi
 #for dim in 1 2 3 5 10 20 30 40 50 60 70 80 90 100 150 200 
-for dim in 15 20
+for dim in 10 20 30 40 50 60 70 80 90 100
 do
 for ord in 2
 do

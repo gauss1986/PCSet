@@ -6,7 +6,7 @@
 #include <iostream>
 
 #define PCTYPE "LU"
-#define DOF 7
+#define DOF 5
 #define ORDER 2
 #define COMPUTE3 true
 
@@ -38,8 +38,8 @@ int main(int argc, char *argv[]){
             case 't':
 		        int temp;
                 temp = strtod(optarg,(char **)NULL);
-                if (temp == 1)
-		            comp3 = true;
+                if (temp == 0)
+		            comp3 = false;
                 break;
             }
         }

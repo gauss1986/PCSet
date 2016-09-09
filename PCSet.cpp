@@ -435,6 +435,7 @@ void PCSet::EvalBasisProd3()
     cout << endl;
     cout << "Computation of <\\Psi_i \\Psi_j \\Psi_k>'s. The number of non-zero entries for" << endl;
   }
+  #pragma omp parallel for schedule(dynamic)  
   for(int k=0; k < nPCTerms_; k++){
     // Make sure there are no elements in the <\Psi_i \Psi_j \Psi_k> storage vector
     iProd2_(k).Clear();
@@ -446,8 +447,6 @@ void PCSet::EvalBasisProd3()
         for(int iqp=0; iqp < nQuadPoints_; iqp++){
           wrkSum += psi_(iqp,i)*psi_(iqp,j)*psi_(iqp,k)*quadWeights_(iqp);
         }
-        
-          
 
         // All these terms are supposed to be integer-valued actually, but
         // roundoff and inaccuracies from the integration can make them
@@ -461,19 +460,19 @@ void PCSet::EvalBasisProd3()
         }
       }
     }
-    if(uqtkverbose_>0){
-      cout << "k = " << k << " : " << psiIJKProd2_(k).Length() << endl;
-    }
-    if(uqtkverbose_>1){
-     	Array1D<double> tmpw;
-      tmpw=psiIJKProd2_(k);
-      Array1D<int> tmpi, tmpj;
-      tmpi=iProd2_(k);
-      tmpj=jProd2_(k);
-      for (int m=0;m<(int) psiIJKProd2_(k).Length();m++)
-        cout << tmpi(m) << " " << tmpj(m) << " " << k << " : " << tmpw(m) << endl;
-      cout << endl;
-    }   
+    //if(uqtkverbose_>0){
+    //  cout << "k = " << k << " : " << psiIJKProd2_(k).Length() << endl;
+    //}
+    //if(uqtkverbose_>1){
+    // 	Array1D<double> tmpw;
+    //  tmpw=psiIJKProd2_(k);
+    //  Array1D<int> tmpi, tmpj;
+    //  tmpi=iProd2_(k);
+    //  tmpj=jProd2_(k);
+    //  for (int m=0;m<(int) psiIJKProd2_(k).Length();m++)
+    //    cout << tmpi(m) << " " << tmpj(m) << " " << k << " : " << tmpw(m) << endl;
+    //  cout << endl;
+    //}   
 
   }
   cout << endl;
@@ -2489,10 +2488,13 @@ void PCSet::EvalNormSq(Array1D<double>& normsq)
   p_basis_->Get1dNormsSq(norms1d);
 
   // FOr each term, multiply appropriate 1d norms-squared
-  for(int ipc=0; ipc<nPCTerms_; ipc++)
-    for(int id=0; id<nDim_; id++)
-      normsq(ipc) *= norms1d(multiIndex_(ipc,id));
-  
+    #pragma omp parallel for shared(norms1d,normsq) schedule(dynamic) 
+    for(int ipc=0; ipc<nPCTerms_; ipc++){
+      double temp = 1.e0;
+      for(int id=0; id<nDim_; id++)
+        temp *= norms1d(multiIndex_(ipc,id));
+      normsq(ipc) = temp;
+    }
 
   return;
 }
