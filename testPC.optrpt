@@ -1,0 +1,284 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+
+    Report from: Interprocedural optimizations [ipo]
+
+  WHOLE PROGRAM (SAFE) [EITHER METHOD]: false
+  WHOLE PROGRAM (SEEN) [TABLE METHOD]: false
+  WHOLE PROGRAM (READ) [OBJECT READER METHOD]: false
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+In the inlining report below:
+   "sz" refers to the "size" of the routine. The smaller a routine's size,
+      the more likely it is to be inlined.
+   "isz" refers to the "inlined size" of the routine. This is the amount
+      the calling routine will grow if the called routine is inlined into it.
+      The compiler generally limits the amount a routine can grow by having
+      routines inlined into it.
+
+Begin optimization report for: main(int, char **)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (main(int, char **)) [1/32=3.1%] testPC.cpp(13,33)
+  -> DELETED: (15,12) std::allocator<char>::~allocator(std::allocator<char> *) (isz = 0) (sz = 3)
+  -> INLINE (MANUAL): (15,21) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::~basic_string(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) (isz = 20) (sz = 25)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(539,9) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_rep(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 2) (sz = 9)
+      -> INLINE (MANUAL): (301,44) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_data(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 0) (sz = 6)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(539,19) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_M_dispose(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep *, const std::allocator<char> &) (isz = 24) (sz = 31)
+      -> INLINE (MANUAL): (240,34) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_S_empty_rep() (isz = 0) (sz = 5)
+      -> (245,12) __gnu_cxx::__exchange_and_add_dispatch(_Atomic_word *, int) (isz = 11) (sz = 20)
+         [[ Callee not marked with inlining pragma  <1>]]
+      -> EXTERN: (249,5) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_M_destroy(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep *, const std::allocator<char> &)
+    -> DELETED: /usr/include/c++/4.8.5/bits/basic_string.h:(539,36) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::get_allocator(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::allocator_type *, const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 2) (sz = 9)
+  -> DELETED: (15,21) std::allocator<char>::~allocator(std::allocator<char> *) (isz = 0) (sz = 3)
+  -> EXTERN: (15,21) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::basic_string(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *, const char *, const std::allocator<char> &)
+  -> DELETED: (15,21) std::allocator<char>::allocator(std::allocator<char> *) (isz = 2) (sz = 7)
+  -> EXTERN: (22,15) getopt(int, char *const *, const char *)
+  -> EXTERN: (22,15) getopt(int, char *const *, const char *)
+  -> EXTERN: (25,23) strtod(const char *, char **)
+  -> EXTERN: (28,25) strtod(const char *, char **)
+  -> EXTERN: (32,25) strtod(const char *, char **)
+  -> INLINE (MANUAL): (34,22) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::operator=(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *, const char *) (isz = 2) (sz = 11)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(555,22) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::assign(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *, const char *) (isz = 6) (sz = 15)
+      -> EXTERN: (1131,15) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::assign(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *, const char *, std::basic_string<char, std::char_traits<char>, std::allocator<char>>::size_type)
+      -> INLINE (MANUAL): (1131,27) std::char_traits<char>::length(const std::char_traits<char>::char_type *) (isz = 1) (sz = 8)
+        -> EXTERN: /usr/include/c++/4.8.5/bits/char_traits.h:(259,16) __builtin_strlen(const char *)
+  -> INLINE (MANUAL): (36,22) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::operator=(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *, const char *) (isz = 2) (sz = 11)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(555,22) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::assign(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *, const char *) (isz = 6) (sz = 15)
+      -> EXTERN: (1131,15) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::assign(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *, const char *, std::basic_string<char, std::char_traits<char>, std::allocator<char>>::size_type)
+      -> INLINE (MANUAL): (1131,27) std::char_traits<char>::length(const std::char_traits<char>::char_type *) (isz = 1) (sz = 8)
+        -> EXTERN: /usr/include/c++/4.8.5/bits/char_traits.h:(259,16) __builtin_strlen(const char *)
+  -> EXTERN: (40,24) strtod(const char *, char **)
+  -> (48,10) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *) (isz = 15) (sz = 24)
+     [[ Called routine is noinline  <2>]]
+  -> EXTERN: (48,43) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, int)
+  -> (48,50) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, std::basic_ostream<char, std::char_traits<char>>::__ostream_type &(*)(std::basic_ostream<char, std::char_traits<char>>::__ostream_type &)) (isz = 0) (sz = 9)
+     [[ Called routine is noinline  <2>]]
+  -> (48,58) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, std::basic_ostream<char, std::char_traits<char>>::__ostream_type &(*)(std::basic_ostream<char, std::char_traits<char>>::__ostream_type &)) (isz = 0) (sz = 9)
+     [[ Called routine is noinline  <2>]]
+  -> (49,10) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *) (isz = 15) (sz = 24)
+     [[ Called routine is noinline  <2>]]
+  -> EXTERN: (49,43) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, int)
+  -> (49,52) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, std::basic_ostream<char, std::char_traits<char>>::__ostream_type &(*)(std::basic_ostream<char, std::char_traits<char>>::__ostream_type &)) (isz = 0) (sz = 9)
+     [[ Called routine is noinline  <2>]]
+  -> (49,60) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, std::basic_ostream<char, std::char_traits<char>>::__ostream_type &(*)(std::basic_ostream<char, std::char_traits<char>>::__ostream_type &)) (isz = 0) (sz = 9)
+     [[ Called routine is noinline  <2>]]
+  -> (51,14) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *) (isz = 15) (sz = 24)
+     [[ Called routine is noinline  <2>]]
+  -> (51,36) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, std::basic_ostream<char, std::char_traits<char>>::__ostream_type &(*)(std::basic_ostream<char, std::char_traits<char>>::__ostream_type &)) (isz = 0) (sz = 9)
+     [[ Called routine is noinline  <2>]]
+  -> (51,44) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, std::basic_ostream<char, std::char_traits<char>>::__ostream_type &(*)(std::basic_ostream<char, std::char_traits<char>>::__ostream_type &)) (isz = 0) (sz = 9)
+     [[ Called routine is noinline  <2>]]
+  -> (54,15) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *) (isz = 15) (sz = 24)
+     [[ Called routine is noinline  <2>]]
+  -> (54,48) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, std::basic_ostream<char, std::char_traits<char>>::__ostream_type &(*)(std::basic_ostream<char, std::char_traits<char>>::__ostream_type &)) (isz = 0) (sz = 9)
+     [[ Called routine is noinline  <2>]]
+  -> (54,55) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, std::basic_ostream<char, std::char_traits<char>>::__ostream_type &(*)(std::basic_ostream<char, std::char_traits<char>>::__ostream_type &)) (isz = 0) (sz = 9)
+     [[ Called routine is noinline  <2>]]
+  -> EXTERN: (58,8) TickTock::tick(TickTock *)
+  -> INLINE (MANUAL): (59,11) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::~basic_string(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) (isz = 20) (sz = 25)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(539,9) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_rep(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 2) (sz = 9)
+      -> INLINE (MANUAL): (301,44) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_data(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 0) (sz = 6)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(539,19) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_M_dispose(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep *, const std::allocator<char> &) (isz = 24) (sz = 31)
+      -> INLINE (MANUAL): (240,34) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_S_empty_rep() (isz = 0) (sz = 5)
+      -> INLINE (MANUAL): (245,12) __gnu_cxx::__exchange_and_add_dispatch(_Atomic_word *, int) (isz = 11) (sz = 20)
+        -> INLINE (MANUAL): /usr/include/c++/4.8.5/ext/atomicity.h:(81,9) __gthread_active_p() (isz = 1) (sz = 5)
+        -> INLINE (MANUAL): /usr/include/c++/4.8.5/ext/atomicity.h:(82,14) __gnu_cxx::__exchange_and_add(volatile _Atomic_word *, int) (isz = 4) (sz = 13)
+          -> EXTERN: (49,12) __atomic_fetch_add_4(volatile void *, unsigned int, int)
+        -> INLINE (MANUAL): /usr/include/c++/4.8.5/ext/atomicity.h:(84,14) __gnu_cxx::__exchange_and_add_single(_Atomic_word *, int) (isz = 3) (sz = 12)
+      -> EXTERN: (249,5) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_M_destroy(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep *, const std::allocator<char> &)
+    -> DELETED: /usr/include/c++/4.8.5/bits/basic_string.h:(539,36) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::get_allocator(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::allocator_type *, const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 2) (sz = 9)
+  -> INLINE (MANUAL): (59,11) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::~basic_string(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) (isz = 20) (sz = 25)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(539,9) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_rep(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 2) (sz = 9)
+      -> INLINE (MANUAL): (301,44) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_data(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 0) (sz = 6)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(539,19) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_M_dispose(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep *, const std::allocator<char> &) (isz = 24) (sz = 31)
+      -> INLINE (MANUAL): (240,34) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_S_empty_rep() (isz = 0) (sz = 5)
+      -> INLINE (MANUAL): (245,12) __gnu_cxx::__exchange_and_add_dispatch(_Atomic_word *, int) (isz = 11) (sz = 20)
+        -> INLINE (MANUAL): /usr/include/c++/4.8.5/ext/atomicity.h:(81,9) __gthread_active_p() (isz = 1) (sz = 5)
+        -> INLINE (MANUAL): /usr/include/c++/4.8.5/ext/atomicity.h:(82,14) __gnu_cxx::__exchange_and_add(volatile _Atomic_word *, int) (isz = 4) (sz = 13)
+          -> EXTERN: (49,12) __atomic_fetch_add_4(volatile void *, unsigned int, int)
+        -> INLINE (MANUAL): /usr/include/c++/4.8.5/ext/atomicity.h:(84,14) __gnu_cxx::__exchange_and_add_single(_Atomic_word *, int) (isz = 3) (sz = 12)
+      -> EXTERN: (249,5) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_M_destroy(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep *, const std::allocator<char> &)
+    -> DELETED: /usr/include/c++/4.8.5/bits/basic_string.h:(539,36) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::get_allocator(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::allocator_type *, const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 2) (sz = 9)
+  -> DELETED: (59,11) std::allocator<char>::~allocator(std::allocator<char> *) (isz = 0) (sz = 3)
+  -> DELETED: (59,19) std::allocator<char>::~allocator(std::allocator<char> *) (isz = 0) (sz = 3)
+  -> INLINE (MANUAL): (59,19) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::~basic_string(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) (isz = 20) (sz = 25)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(539,9) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_rep(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 2) (sz = 9)
+      -> INLINE (MANUAL): (301,44) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_data(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 0) (sz = 6)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(539,19) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_M_dispose(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep *, const std::allocator<char> &) (isz = 24) (sz = 31)
+      -> INLINE (MANUAL): (240,34) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_S_empty_rep() (isz = 0) (sz = 5)
+      -> (245,12) __gnu_cxx::__exchange_and_add_dispatch(_Atomic_word *, int) (isz = 11) (sz = 20)
+         [[ Callee not marked with inlining pragma  <1>]]
+      -> EXTERN: (249,5) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_M_destroy(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep *, const std::allocator<char> &)
+    -> DELETED: /usr/include/c++/4.8.5/bits/basic_string.h:(539,36) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::get_allocator(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::allocator_type *, const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 2) (sz = 9)
+  -> DELETED: (59,19) std::allocator<char>::allocator(std::allocator<char> *) (isz = 2) (sz = 7)
+  -> EXTERN: (59,19) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::basic_string(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *, const char *, const std::allocator<char> &)
+  -> INLINE (MANUAL): (59,35) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::~basic_string(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) (isz = 20) (sz = 25)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(539,9) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_rep(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 2) (sz = 9)
+      -> INLINE (MANUAL): (301,44) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_data(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 0) (sz = 6)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(539,19) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_M_dispose(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep *, const std::allocator<char> &) (isz = 24) (sz = 31)
+      -> INLINE (MANUAL): (240,34) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_S_empty_rep() (isz = 0) (sz = 5)
+      -> (245,12) __gnu_cxx::__exchange_and_add_dispatch(_Atomic_word *, int) (isz = 11) (sz = 20)
+         [[ Callee not marked with inlining pragma  <1>]]
+      -> EXTERN: (249,5) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_M_destroy(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep *, const std::allocator<char> &)
+    -> DELETED: /usr/include/c++/4.8.5/bits/basic_string.h:(539,36) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::get_allocator(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::allocator_type *, const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 2) (sz = 9)
+  -> EXTERN: (59,35) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::basic_string(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *, const std::basic_string<char, std::char_traits<char>, std::allocator<char>> &)
+  -> EXTERN: (59,50) PCSet::PCSet(PCSet *, const std::string *, int, int, const std::string *, double, double, bool)
+  -> EXTERN: (59,50) PCSet::~PCSet(PCSet *)
+  -> EXTERN: (60,8) TickTock::tock(const TickTock *, const char *) const
+  -> INLINE (MANUAL): (62,5) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::~basic_string(std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) (isz = 20) (sz = 25)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(539,9) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_rep(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 2) (sz = 9)
+      -> INLINE (MANUAL): (301,44) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_data(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 0) (sz = 6)
+    -> INLINE (MANUAL): /usr/include/c++/4.8.5/bits/basic_string.h:(539,19) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_M_dispose(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep *, const std::allocator<char> &) (isz = 24) (sz = 31)
+      -> INLINE (MANUAL): (240,34) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_S_empty_rep() (isz = 0) (sz = 5)
+      -> INLINE (MANUAL): (245,12) __gnu_cxx::__exchange_and_add_dispatch(_Atomic_word *, int) (isz = 11) (sz = 20)
+        -> INLINE (MANUAL): /usr/include/c++/4.8.5/ext/atomicity.h:(81,9) __gthread_active_p() (isz = 1) (sz = 5)
+        -> INLINE (MANUAL): /usr/include/c++/4.8.5/ext/atomicity.h:(82,14) __gnu_cxx::__exchange_and_add(volatile _Atomic_word *, int) (isz = 4) (sz = 13)
+          -> EXTERN: (49,12) __atomic_fetch_add_4(volatile void *, unsigned int, int)
+        -> INLINE (MANUAL): /usr/include/c++/4.8.5/ext/atomicity.h:(84,14) __gnu_cxx::__exchange_and_add_single(_Atomic_word *, int) (isz = 3) (sz = 12)
+      -> EXTERN: (249,5) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep::_M_destroy(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::_Rep *, const std::allocator<char> &)
+    -> DELETED: /usr/include/c++/4.8.5/bits/basic_string.h:(539,36) std::basic_string<char, std::char_traits<char>, std::allocator<char>>::get_allocator(std::basic_string<char, std::char_traits<char>, std::allocator<char>>::allocator_type *, const std::basic_string<char, std::char_traits<char>, std::allocator<char>> *) const (isz = 2) (sz = 9)
+  -> EXTERN: (62,5) PCSet::~PCSet(PCSet *)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at testPC.cpp(22,5)
+   remark #15521: loop was not vectorized: loop control variable was not identified. Explicitly compute the iteration count before executing the loop or try using canonical loop form
+LOOP END
+===========================================================================
+
+Begin optimization report for: __gnu_cxx::__exchange_and_add_dispatch(_Atomic_word *, int)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (__gnu_cxx::__exchange_and_add_dispatch(_Atomic_word *, int)) [2/32=6.2%] /usr/include/c++/4.8.5/ext/atomicity.h(79,3)
+  -> INLINE (MANUAL): (81,9) __gthread_active_p() (isz = 1) (sz = 5)
+  -> INLINE (MANUAL): (82,14) __gnu_cxx::__exchange_and_add(volatile _Atomic_word *, int) (isz = 4) (sz = 13)
+    -> EXTERN: (49,12) __atomic_fetch_add_4(volatile void *, unsigned int, int)
+  -> INLINE (MANUAL): (84,14) __gnu_cxx::__exchange_and_add_single(_Atomic_word *, int) (isz = 3) (sz = 12)
+
+===========================================================================
+
+Begin optimization report for: std::char_traits<char>::length(const std::char_traits<char>::char_type *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (std::char_traits<char>::length(const std::char_traits<char>::char_type *)) [6/32=18.8%] /usr/include/c++/4.8.5/bits/char_traits.h(259,7)
+  -> EXTERN: (259,16) __builtin_strlen(const char *)
+
+===========================================================================
+
+Begin optimization report for: __gthread_active_p()
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (__gthread_active_p()) /usr/include/c++/4.8.5/x86_64-redhat-linux/bits/gthr-default.h(248,1)
+
+===========================================================================
+
+Begin optimization report for: std::ctype<char>::widen(const std::ctype<char> *, char) const
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (std::ctype<char>::widen(const std::ctype<char> *, char) const) /usr/include/c++/4.8.5/bits/locale_facets.h(866,7)
+
+===========================================================================
+
+Begin optimization report for: __gnu_cxx::new_allocator<char>::new_allocator(__gnu_cxx::new_allocator<char> *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (__gnu_cxx::new_allocator<char>::new_allocator(__gnu_cxx::new_allocator<char> *)) /usr/include/c++/4.8.5/ext/new_allocator.h(79,45)
+
+===========================================================================
+
+Begin optimization report for: __gnu_cxx::new_allocator<char>::new_allocator(__gnu_cxx::new_allocator<char> *const)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (__gnu_cxx::new_allocator<char>::new_allocator(__gnu_cxx::new_allocator<char> *const)) /usr/include/c++/4.8.5/ext/new_allocator.h(79,7)
+
+===========================================================================
+
+Begin optimization report for: __gnu_cxx::new_allocator<char>::new_allocator(__gnu_cxx::new_allocator<char> *, const __gnu_cxx::new_allocator<char> &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (__gnu_cxx::new_allocator<char>::new_allocator(__gnu_cxx::new_allocator<char> *, const __gnu_cxx::new_allocator<char> &)) /usr/include/c++/4.8.5/ext/new_allocator.h(81,65)
+
+===========================================================================
+
+Begin optimization report for: __gnu_cxx::new_allocator<char>::new_allocator(__gnu_cxx::new_allocator<char> *const, const __gnu_cxx::new_allocator<char> &)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (__gnu_cxx::new_allocator<char>::new_allocator(__gnu_cxx::new_allocator<char> *const, const __gnu_cxx::new_allocator<char> &)) /usr/include/c++/4.8.5/ext/new_allocator.h(81,7)
+
+===========================================================================
+
+Begin optimization report for: std::operator|(std::_Ios_Iostate, std::_Ios_Iostate)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (std::operator|(std::_Ios_Iostate, std::_Ios_Iostate)) /usr/include/c++/4.8.5/bits/ios_base.h(158,3)
+
+===========================================================================
+
+Begin optimization report for: std::__check_facet<std::basic_ios<char, std::char_traits<char>>::__ctype_type>(const std::basic_ios<char, std::char_traits<char>>::__ctype_type *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (std::__check_facet<std::basic_ios<char, std::char_traits<char>>::__ctype_type>(const std::basic_ios<char, std::char_traits<char>>::__ctype_type *)) /usr/include/c++/4.8.5/bits/basic_ios.h(47,5)
+
+===========================================================================
+
+Begin optimization report for: __gnu_cxx::__exchange_and_add(volatile _Atomic_word *, int)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (__gnu_cxx::__exchange_and_add(volatile _Atomic_word *, int)) /usr/include/c++/4.8.5/ext/atomicity.h(49,3)
+
+===========================================================================
+
+Begin optimization report for: __gnu_cxx::__exchange_and_add_single(_Atomic_word *, int)
+
+    Report from: Interprocedural optimizations [ipo]
+
+DEAD STATIC FUNCTION: (__gnu_cxx::__exchange_and_add_single(_Atomic_word *, int)) /usr/include/c++/4.8.5/ext/atomicity.h(66,3)
+
+===========================================================================
+
+Begin optimization report for: __sti__$E()
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (__sti__$E()) [32/32=100.0%] <compiler generated>
+  -> EXTERN: /usr/include/c++/4.8.5/iostream:(74,25) __cxa_atexit()
+  -> EXTERN: /usr/include/c++/4.8.5/iostream:(74,25) std::ios_base::Init::Init(std::ios_base::Init *)
+
+===========================================================================
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINING FOOTNOTES:
+
+<1> The compiler's heuristics indicate that the function is not profitable to 
+    inline.  Override this decision by adding "inline 
+    __attribute__((always_inline))" to the declaration of the called function, 
+    or add "#pragma forceinline" before the call site.
+
+<2> The routine declaration is annotated with "__attribute__((noinline))".  
+    Remove this annotation to permit the compiler to inline this routine.
+

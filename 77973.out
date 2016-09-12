@@ -1,0 +1,67 @@
+Degrees of freedom         10
+Order of polynomial chaos  2
+Pijk is computed
+Used level 2 sparse quadrature points for initialization.
+
+PCSet is being generated
+Took 	0.07341 sec
+Degrees of freedom         20
+Order of polynomial chaos  2
+Pijk is computed
+Used level 2 sparse quadrature points for initialization.
+
+PCSet is being generated
+Took 	1.424 sec
+Degrees of freedom         30
+Order of polynomial chaos  2
+Pijk is computed
+Used level 2 sparse quadrature points for initialization.
+
+PCSet is being generated
+Took 	17.32 sec
+Degrees of freedom         40
+Order of polynomial chaos  2
+Pijk is computed
+Used level 2 sparse quadrature points for initialization.
+
+PCSet is being generated
+Took 	143.2 sec
+Degrees of freedom         50
+Order of polynomial chaos  2
+Pijk is computed
+Used level 2 sparse quadrature points for initialization.
+
+PCSet is being generated
+Took 	853 sec
+Degrees of freedom         60
+Order of polynomial chaos  2
+Pijk is computed
+Used level 2 sparse quadrature points for initialization.
+
+PCSet is being generated
+Took 	3667 sec
+Degrees of freedom         70
+Order of polynomial chaos  2
+Pijk is computed
+Used level 2 sparse quadrature points for initialization.
+
+PCSet is being generated
+Took 	1.278e+04 sec
+Degrees of freedom         80
+Order of polynomial chaos  2
+Pijk is computed
+Used level 2 sparse quadrature points for initialization.
+
+PCSet is being generated
+Took 	3.86e+04 sec
+Degrees of freedom         90
+Order of polynomial chaos  2
+Pijk is computed
+Used level 2 sparse quadrature points for initialization.
+
+PCSet is being generated
+Took 	9.532e+04 sec
+Degrees of freedom         100
+Order of polynomial chaos  2
+Pijk is computed
+Used level 2 sparse quadrature points for initialization.

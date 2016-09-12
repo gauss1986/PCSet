@@ -43,3 +43,18 @@ Took 	332.9 sec
 Degrees of freedom         80
 Order of polynomial chaos  2
 Pijk computation is skipped
+Used level 2 sparse quadrature points for initialization.
+PCSet is being generated
+Took 	882.3 sec
+Degrees of freedom         90
+Order of polynomial chaos  2
+Pijk computation is skipped
+Used level 2 sparse quadrature points for initialization.
+PCSet is being generated
+Took 	1569 sec
+Degrees of freedom         100
+Order of polynomial chaos  2
+Pijk computation is skipped
+Used level 2 sparse quadrature points for initialization.
+PCSet is being generated
+Took 	2702 sec
