@@ -15,7 +15,7 @@
 ## Job specific
 ##===================================
 #
-# @ job_name = testPC_HG_with3
+# @ job_name = testPC_LU_with3
 # @ job_type = parallel
 # @ class = verylong
 # @ output = $(jobid).out
@@ -33,6 +33,6 @@ for dim in 100
 do
 for ord in 2
 do
-    ./testPC.x -n $dim -o $ord -p 1 
+    ./testPC.x -n $dim -o $ord  
 done
 done

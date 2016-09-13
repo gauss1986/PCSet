@@ -435,14 +435,25 @@ void PCSet::EvalBasisProd3()
     cout << endl;
     cout << "Computation of <\\Psi_i \\Psi_j \\Psi_k>'s. The number of non-zero entries for" << endl;
   }
-  #pragma omp parallel for schedule(dynamic)  
   for(int k=0; k < nPCTerms_; k++){
     // Make sure there are no elements in the <\Psi_i \Psi_j \Psi_k> storage vector
     iProd2_(k).Clear();
     jProd2_(k).Clear();
     psiIJKProd2_(k).Clear();
+  }
+  #pragma omp parallel for schedule(dynamic)  
+  for(int k=0; k < nPCTerms_; k++){
     for(int j=0; j < nPCTerms_; j++){
-      for(int i=0; i < nPCTerms_; i++){
+      double wrkSum1 = 0.e0;
+      for(int iqp=0; iqp < nQuadPoints_; iqp++){
+        wrkSum1 += psi_(iqp,j)*psi_(iqp,j)*psi_(iqp,k)*quadWeights_(iqp);
+      }
+      if(fabs(wrkSum1) > 0.001){
+        iProd2_(k).PushBack(j);
+        jProd2_(k).PushBack(j);
+        psiIJKProd2_(k).PushBack(wrkSum1);
+      }
+      for(int i=j+1; i < nPCTerms_; i++){
         double wrkSum = 0.e0;
         for(int iqp=0; iqp < nQuadPoints_; iqp++){
           wrkSum += psi_(iqp,i)*psi_(iqp,j)*psi_(iqp,k)*quadWeights_(iqp);
@@ -456,6 +467,9 @@ void PCSet::EvalBasisProd3()
           // Store the term and its indices
           iProd2_(k).PushBack(i);
           jProd2_(k).PushBack(j);
+          psiIJKProd2_(k).PushBack(wrkSum);
+          iProd2_(k).PushBack(j);
+          jProd2_(k).PushBack(i);
           psiIJKProd2_(k).PushBack(wrkSum);
         }
       }
