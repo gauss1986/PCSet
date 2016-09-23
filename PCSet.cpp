@@ -444,15 +444,6 @@ void PCSet::EvalBasisProd3()
   #pragma omp parallel for schedule(dynamic)  
   for(int k=0; k < nPCTerms_; k++){
     for(int j=k+1; j < nPCTerms_; j++){
-      //double wrkSum1 = 0.e0;
-      //for(int iqp=0; iqp < nQuadPoints_; iqp++){
-      //  wrkSum1 += psi_(iqp,j)*psi_(iqp,j)*psi_(iqp,k)*quadWeights_(iqp);
-      //}
-      //if(fabs(wrkSum1) > 0.001){
-      //  iProd2_(k).PushBack(j);
-      //  jProd2_(k).PushBack(j);
-      //  psiIJKProd2_(k).PushBack(wrkSum1);
-      //}
       for(int i=j+1; i < nPCTerms_; i++){
         double wrkSum = 0.e0;
         for(int iqp=0; iqp < nQuadPoints_; iqp++){
@@ -471,10 +462,10 @@ void PCSet::EvalBasisProd3()
           iProd2_(k).PushBack(j);
           jProd2_(k).PushBack(i);
           psiIJKProd2_(k).PushBack(wrkSum);
-        //}
+        }
           #pragma omp critical
           {
-        //if(fabs(wrkSum) > 0.001){
+          if(fabs(wrkSum) > 0.001){
           iProd2_(i).PushBack(k);
           jProd2_(i).PushBack(j);
           psiIJKProd2_(i).PushBack(wrkSum);
@@ -488,7 +479,7 @@ void PCSet::EvalBasisProd3()
           jProd2_(j).PushBack(k);
           psiIJKProd2_(j).PushBack(wrkSum);
           }
-        }
+          }
       }
     }
   }
@@ -507,14 +498,14 @@ void PCSet::EvalBasisProd3()
               iProd2_(k).PushBack(k);
               jProd2_(k).PushBack(j);
               psiIJKProd2_(k).PushBack(wrkSum);
-            //}
-              #pragma omp critical
-              {
-            //if(fabs(wrkSum) > 0.001){
+            }
+            #pragma omp critical
+            {
+            if(fabs(wrkSum) > 0.001){
               iProd2_(j).PushBack(k);
               jProd2_(j).PushBack(k);
               psiIJKProd2_(j).PushBack(wrkSum);
-              }
+            }
             }
       }
     }
