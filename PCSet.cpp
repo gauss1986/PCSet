@@ -443,12 +443,23 @@ void PCSet::EvalBasisProd3()
   }
   #pragma omp parallel for schedule(dynamic)  
   for(int k=0; k < nPCTerms_; k++){
-    for(int j=k+1; j < nPCTerms_; j++){
+    for(int j=0; j < nPCTerms_; j++){
+      double wrkSum1 = 0.e0;
+      for(int iqp=0; iqp < nQuadPoints_; iqp++){
+        wrkSum1 += psi_(iqp,j)*psi_(iqp,j)*psi_(iqp,k)*quadWeights_(iqp);
+      }
+      if(fabs(wrkSum1) > 0.001){
+        iProd2_(k).PushBack(j);
+        jProd2_(k).PushBack(j);
+        psiIJKProd2_(k).PushBack(wrkSum1);
+      }
       for(int i=j+1; i < nPCTerms_; i++){
-        double wrkSum = 0.e0;
+        Array1D<double> wrk(nQuadPoints_,0.e0);
+        #pragma ivdep
         for(int iqp=0; iqp < nQuadPoints_; iqp++){
-          wrkSum += psi_(iqp,i)*psi_(iqp,j)*psi_(iqp,k)*quadWeights_(iqp);
+          wrk(iqp) = psi_(iqp,i)*psi_(iqp,j)*psi_(iqp,k)*quadWeights_(iqp);
         }
+        double wrkSum=sum(wrk);
 
         // All these terms are supposed to be integer-valued actually, but
         // roundoff and inaccuracies from the integration can make them
@@ -463,63 +474,6 @@ void PCSet::EvalBasisProd3()
           jProd2_(k).PushBack(i);
           psiIJKProd2_(k).PushBack(wrkSum);
         }
-          #pragma omp critical
-          {
-          if(fabs(wrkSum) > 0.001){
-          iProd2_(i).PushBack(k);
-          jProd2_(i).PushBack(j);
-          psiIJKProd2_(i).PushBack(wrkSum);
-          iProd2_(i).PushBack(j);
-          jProd2_(i).PushBack(k);
-          psiIJKProd2_(i).PushBack(wrkSum);
-          iProd2_(j).PushBack(k);
-          jProd2_(j).PushBack(i);
-          psiIJKProd2_(j).PushBack(wrkSum);
-          iProd2_(j).PushBack(i);
-          jProd2_(j).PushBack(k);
-          psiIJKProd2_(j).PushBack(wrkSum);
-          }
-          }
-      }
-    }
-  }
-    #pragma omp parallel for schedule(dynamic)  
-    for(int k=0; k < nPCTerms_; k++){
-      for(int j=0; j < nPCTerms_; j++){
-          if (j!=k){
-            double wrkSum = 0.e0;
-            for(int iqp=0; iqp < nQuadPoints_; iqp++){
-              wrkSum += psi_(iqp,k)*psi_(iqp,k)*psi_(iqp,j)*quadWeights_(iqp);
-            }
-            if(fabs(wrkSum) > 0.001){
-              iProd2_(k).PushBack(j);
-              jProd2_(k).PushBack(k);
-              psiIJKProd2_(k).PushBack(wrkSum);
-              iProd2_(k).PushBack(k);
-              jProd2_(k).PushBack(j);
-              psiIJKProd2_(k).PushBack(wrkSum);
-            }
-            #pragma omp critical
-            {
-            if(fabs(wrkSum) > 0.001){
-              iProd2_(j).PushBack(k);
-              jProd2_(j).PushBack(k);
-              psiIJKProd2_(j).PushBack(wrkSum);
-            }
-            }
-      }
-    }
-  }
-    #pragma omp parallel for schedule(dynamic)  
-    for(int k=0; k < nPCTerms_; k++){
-      double wrkSum = 0.e0;
-      for(int iqp=0; iqp < nQuadPoints_; iqp++){
-        wrkSum += pow(psi_(iqp,k),3)*quadWeights_(iqp);
-      }
-      if(fabs(wrkSum) > 0.001){
-        iProd2_(k).PushBack(k);
-        jProd2_(k).PushBack(k);
-        psiIJKProd2_(k).PushBack(wrkSum);
       }
     }
     //if(uqtkverbose_>0){
@@ -535,6 +489,8 @@ void PCSet::EvalBasisProd3()
     //    cout << tmpi(m) << " " << tmpj(m) << " " << k << " : " << tmpw(m) << endl;
     //  cout << endl;
     //}   
+
+  }
   cout << endl;
  
 

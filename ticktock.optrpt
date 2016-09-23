@@ -5,10 +5,6 @@ See "https://software.intel.com/en-us/intel-advisor-xe" for details.
 
     Report from: Interprocedural optimizations [ipo]
 
-  WHOLE PROGRAM (SAFE) [EITHER METHOD]: false
-  WHOLE PROGRAM (SEEN) [TABLE METHOD]: false
-  WHOLE PROGRAM (READ) [OBJECT READER METHOD]: false
-
 INLINING OPTION VALUES:
   -inline-factor: 100
   -inline-min-size: 30
@@ -17,13 +13,6 @@ INLINING OPTION VALUES:
   -inline-max-per-routine: 10000
   -inline-max-per-compile: 500000
 
-In the inlining report below:
-   "sz" refers to the "size" of the routine. The smaller a routine's size,
-      the more likely it is to be inlined.
-   "isz" refers to the "inlined size" of the routine. This is the amount
-      the calling routine will grow if the called routine is inlined into it.
-      The compiler generally limits the amount a routine can grow by having
-      routines inlined into it.
 
 Begin optimization report for: print(const char *, double)
 
@@ -37,7 +26,7 @@ Begin optimization report for: std::ios_base::precision(std::ios_base *, std::st
 
     Report from: Interprocedural optimizations [ipo]
 
-INLINE REPORT: (std::ios_base::precision(std::ios_base *, std::streamsize)) [4/15=26.7%] /usr/include/c++/4.8.5/bits/ios_base.h(631,5)
+INLINE REPORT: (std::ios_base::precision(std::ios_base *, std::streamsize)) [4] /usr/include/c++/4.8.5/bits/ios_base.h(631,5)
 
 ===========================================================================
 
@@ -45,7 +34,7 @@ Begin optimization report for: std::char_traits<char>::length(const std::char_tr
 
     Report from: Interprocedural optimizations [ipo]
 
-INLINE REPORT: (std::char_traits<char>::length(const std::char_traits<char>::char_type *)) [7/15=46.7%] /usr/include/c++/4.8.5/bits/char_traits.h(259,7)
+INLINE REPORT: (std::char_traits<char>::length(const std::char_traits<char>::char_type *)) [7] /usr/include/c++/4.8.5/bits/char_traits.h(259,7)
   -> EXTERN: (259,16) __builtin_strlen(const char *)
 
 ===========================================================================
@@ -62,8 +51,8 @@ Begin optimization report for: TickTock::tick(TickTock *)
 
     Report from: Interprocedural optimizations [ipo]
 
-INLINE REPORT: (TickTock::tick(TickTock *)) [9/15=60.0%] ticktock.cc(30,1)
-  -> INLINE: (32,13) elapsed_time() (isz = 8) (sz = 13)
+INLINE REPORT: (TickTock::tick(TickTock *)) [9] ticktock.cc(30,1)
+  -> INLINE: (32,13) elapsed_time()
     -> EXTERN: (25,4) gettimeofday(timeval *, timezone *)
 
 ===========================================================================
@@ -72,30 +61,21 @@ Begin optimization report for: TickTock::tock(const TickTock *, const char *) co
 
     Report from: Interprocedural optimizations [ipo]
 
-INLINE REPORT: (TickTock::tock(const TickTock *, const char *) const) [10/15=66.7%] ticktock.cc(36,1)
-  -> INLINE: (38,5) print(const char *, double) (isz = 47) (sz = 54)
-    -> (17,19) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *) (isz = 15) (sz = 24)
-       [[ Called routine is noinline  <1>]]
-    -> (17,29) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *) (isz = 15) (sz = 24)
-       [[ Called routine is noinline  <1>]]
-    -> (17,37) std::operator<<<char, std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, std::_Setprecision) (isz = 5) (sz = 14)
-       [[ Called routine is noinline  <1>]]
-    -> INLINE (MANUAL): (17,58) std::setprecision(int) (isz = 0) (sz = 6)
-    -> (17,61) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, double) (isz = 1) (sz = 10)
-       [[ Called routine is noinline  <1>]]
-    -> (17,67) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *) (isz = 15) (sz = 24)
-       [[ Called routine is noinline  <1>]]
-    -> (19,19) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *) (isz = 15) (sz = 24)
-       [[ Called routine is noinline  <1>]]
-    -> (19,31) std::operator<<<char, std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, std::_Setprecision) (isz = 5) (sz = 14)
-       [[ Called routine is noinline  <1>]]
-    -> INLINE (MANUAL): (19,52) std::setprecision(int) (isz = 0) (sz = 6)
-    -> (19,55) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, double) (isz = 1) (sz = 10)
-       [[ Called routine is noinline  <1>]]
-    -> (19,61) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *) (isz = 15) (sz = 24)
-       [[ Called routine is noinline  <1>]]
-  -> INLINE: (38,19) TickTock::silent_tock(const TickTock *) const (isz = 12) (sz = 19)
-    -> INLINE: (44,19) elapsed_time() (isz = 8) (sz = 13)
+INLINE REPORT: (TickTock::tock(const TickTock *, const char *) const) [10] ticktock.cc(36,1)
+  -> INLINE: (38,5) print(const char *, double)
+    -> (17,19) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *)
+    -> (17,29) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *)
+    -> (17,37) std::operator<<<char, std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, std::_Setprecision)
+    -> INLINE (MANUAL): (17,58) std::setprecision(int)
+    -> (17,61) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, double)
+    -> (17,67) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *)
+    -> (19,19) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *)
+    -> (19,31) std::operator<<<char, std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, std::_Setprecision)
+    -> INLINE (MANUAL): (19,52) std::setprecision(int)
+    -> (19,55) std::basic_ostream<char, std::char_traits<char>>::operator<<(std::basic_ostream<char, std::char_traits<char>> *, double)
+    -> (19,61) std::operator<<<std::char_traits<char>>(std::basic_ostream<char, std::char_traits<char>> &, const char *)
+  -> INLINE: (38,19) TickTock::silent_tock(const TickTock *) const
+    -> INLINE: (44,19) elapsed_time()
       -> EXTERN: (25,4) gettimeofday(timeval *, timezone *)
 
 ===========================================================================
@@ -104,8 +84,8 @@ Begin optimization report for: TickTock::silent_tock(const TickTock *) const
 
     Report from: Interprocedural optimizations [ipo]
 
-INLINE REPORT: (TickTock::silent_tock(const TickTock *) const) [11/15=73.3%] ticktock.cc(42,1)
-  -> INLINE: (44,19) elapsed_time() (isz = 8) (sz = 13)
+INLINE REPORT: (TickTock::silent_tock(const TickTock *) const) [11] ticktock.cc(42,1)
+  -> INLINE: (44,19) elapsed_time()
     -> EXTERN: (25,4) gettimeofday(timeval *, timezone *)
 
 ===========================================================================
@@ -130,16 +110,8 @@ Begin optimization report for: __sti__$E()
 
     Report from: Interprocedural optimizations [ipo]
 
-INLINE REPORT: (__sti__$E()) [15/15=100.0%] <compiler generated>
+INLINE REPORT: (__sti__$E()) [15] <compiler generated>
   -> EXTERN: /usr/include/c++/4.8.5/iostream:(74,25) __cxa_atexit()
   -> EXTERN: /usr/include/c++/4.8.5/iostream:(74,25) std::ios_base::Init::Init(std::ios_base::Init *)
 
 ===========================================================================
-
-    Report from: Interprocedural optimizations [ipo]
-
-INLINING FOOTNOTES:
-
-<1> The routine declaration is annotated with "__attribute__((noinline))".  
-    Remove this annotation to permit the compiler to inline this routine.
-
