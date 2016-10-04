@@ -6,7 +6,7 @@
 #include <iostream>
 
 #define PCTYPE "LU"
-#define DOF 5
+#define DOF 30
 #define ORDER 2
 #define COMPUTE3 true
 
