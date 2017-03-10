@@ -45,6 +45,7 @@ int main(int argc, char *argv[]){
         }
     
     // print the input info to generate PC set
+    cout << "Polynomial kind            " << pcType << endl << flush;
     cout << "Degrees of freedom         " << dof << endl << flush;
     cout << "Order of polynomial chaos  " << order << endl << flush;
     if (comp3){
