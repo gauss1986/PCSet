@@ -88,9 +88,13 @@ PCSet::PCSet(const string sp_type, const int order, const int n_dim, const strin
     save1D1D(this->jProd2_, dimonkj, ofs_data);
     save1D1D(this->psiIJKProd2_, dimonkpsi, ofs_data);
     // test if the sizes of non-zero terms are the same on every dim
-    for (int i=0;i<nPCTerms_;i++)
+    int size_n0=0;
+    for (int i=0;i<nPCTerms_;i++){
         if (!((dimonki(i) == dimonkj(i)) && (dimonki(i) == dimonkpsi(i))))
             cout << "The size of non-zero terms on dim " << i << " is not the same!!!" << endl; 
+        size_n0 += dimonki(i);
+    }
+    printf("Total No. of nonzero terms in Diji is:%d\n",size_n0);
     for (int i=0;i<nPCTerms_;i++)
         ofs_size.write((char *)&dimonki(i),sizeof(dimonki(i)));
   }
